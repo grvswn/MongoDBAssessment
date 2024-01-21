@@ -101,7 +101,23 @@ async function main() {
       }
     });
     
-
+    app.delete('/routines/:id', async (req, res) => {
+      try {
+        const id = new ObjectId(req.params.id);
+        const routine = await db.collection('routines').findOne({_id: id});
+        if (routine) {
+          const result = await db.collection("routines").remove({
+            _id: id
+          });
+          res.json({ message: 'Routine deleted successfully' });
+        } else {
+            res.status(404).json({ message: 'Routine not found' });
+        }
+      } catch (error) {
+        res.status(500).json({ message: 'Error deleting routine', error: error.message });
+      }
+    });
+  
     app.listen(port, () => {
       console.log(`Server is running on port ${port}`);
     });
