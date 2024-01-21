@@ -15,23 +15,6 @@ async function main() {
 
     app.get('/', (req, res) => {
       res.send('Route Test');
-      
-    });
-
-    app.post('/routines', async (req, res) => {
-        try {
-          const { name, workout_duration, difficulty, category, tags, routine } = req.body;
-      
-          if (!name || !workout_duration || !difficulty || !category || !tags || !routine) {
-            return res.status(400).json({ message: 'Missing required fields' });
-          }
-      
-          const newRoutine = { name, workout_duration, difficulty, category, tags, routine };
-          const result = await db.collection('routines').insertOne(newRoutine);
-          res.status(201).json(result);
-        } catch (error) {
-          res.status(500).json({ message: 'Error adding new routine', error: error.message });
-        }
     });
 
     app.get('/routines', async (req, res) => {
@@ -77,7 +60,47 @@ async function main() {
         }
     });
 
+    app.post('/routines', async (req, res) => {
+      try {
+        const { name, workout_duration, difficulty, category, tags, routine } = req.body;
+    
+        if (!name || !workout_duration || !difficulty || !category || !tags || !routine) {
+          return res.status(400).json({ message: 'Missing required fields' });
+        }
+    
+        const newRoutine = { name, workout_duration, difficulty, category, tags, routine };
+        const result = await db.collection('routines').insertOne(newRoutine);
+        res.status(201).json(result);
+      } catch (error) {
+        res.status(500).json({ message: 'Error adding new routine', error: error.message });
+      }
+    });
 
+    app.put('/routines/:id', async (req, res) => {
+      try {
+        const id = new ObjectId(req.params.id);
+        const { name, workout_duration, difficulty, category, tags, routine } = req.body;
+    
+        if (!name || !Array.isArray(routine) || routine.length === 0) {
+          return res.status(400).json({ message: 'Name and routine required, and routine should be a non-empty array.' });
+        }
+    
+        const updateData = { name, workout_duration, difficulty, category, tags, routine };
+        const result = await db.collection('routines').updateOne(
+          { _id: id },
+          { $set: updateData }
+        );
+    
+        if (result.modifiedCount === 0) {
+          return res.status(404).json({ message: 'No routine found with this ID, or no new data provided' });
+        }
+    
+        res.json({ message: 'Routine updated successfully' });
+      } catch (error) {
+        res.status(500).json({ message: 'Error updating routine', error: error.message });
+      }
+    });
+    
 
     app.listen(port, () => {
       console.log(`Server is running on port ${port}`);
