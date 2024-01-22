@@ -1,7 +1,9 @@
 const express = require('express');
 const cors = require('cors');
-const {connectToMongoDB} = require('./db');
 const {ObjectId} = require("mongodb");
+const {connectToMongoDB} = require('./db');
+const {authenticateToken} = require('./middlewares');
+const userRoutes = require("./users");
 
 const app = express();
 const port = 3000;
@@ -61,7 +63,7 @@ async function main() {
         }
     });
 
-    app.post('/routines', async (req, res) => {
+    app.post('/routines', authenticateToken, async (req, res) => {
       try {
         const {name, workout_duration, difficulty, category, tags, routine} = req.body;
     
@@ -107,7 +109,7 @@ async function main() {
         const id = new ObjectId(req.params.id);
         const routine = await db.collection('routines').findOne({_id: id});
         if (routine) {
-          const result = await db.collection("routines").deleteOne({
+          const result = await db.collection('routines').deleteOne({
             _id: id
           });
           res.json({message: 'Routine deleted successfully'});
@@ -118,6 +120,8 @@ async function main() {
         res.status(500).json({message: 'Error deleting routine', error: error.message});
       }
     });
+
+    app.use('/users', userRoutes);
   
     app.listen(port, () => {
       console.log(`Server is running on port ${port}`);
