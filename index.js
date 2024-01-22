@@ -7,11 +7,12 @@ const app = express();
 const port = 3000;
 
 app.use(cors());
+app.use(express.json());
 
 async function main() {
   try {
     const db = await connectToMongoDB();
-    console.log('Connected to MongoDB');
+    console.log('Connected to MongoDB done');
 
     app.get('/', (req, res) => {
       res.send('Route Test');
