@@ -7,7 +7,7 @@ async function connectToMongoDB() {
   const uri = process.env.MONGODB_URI;
   const client = await MongoClient.connect(uri);
   try {
-    const db = client.db('workouts_db');
+    const db = client.db(process.env.DB_NAME);
     _db = db;
     console.log('Connect to MongoDB');
     return db;
