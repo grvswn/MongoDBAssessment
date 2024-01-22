@@ -63,7 +63,7 @@ async function main() {
         }
     });
 
-    app.post('/routines', authenticateToken, async (req, res) => {
+    app.post('/routines', async (req, res) => {
       try {
         const {name, workout_duration, difficulty, category, tags, routine} = req.body;
     

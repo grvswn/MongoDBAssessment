@@ -3,7 +3,7 @@ const {getDB} = require('./db');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const {ObjectId} = require('mongodb');
-const { authenticateToken } = require('./middlewares');
+const {authenticateToken} = require('./middlewares');
 require('dotenv').config();
 
 const router = express.Router();
@@ -56,4 +56,5 @@ router.get('/profile', authenticateToken, async function (req, res) {
         'user': user
     })
 })
+
 module.exports = router;
