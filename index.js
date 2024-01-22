@@ -12,7 +12,7 @@ app.use(express.json());
 async function main() {
   try {
     const db = await connectToMongoDB();
-    console.log('Connected to MongoDB done');
+    console.log('Connected to MongoDB');
 
     app.get('/', (req, res) => {
       res.send('Route Test');
