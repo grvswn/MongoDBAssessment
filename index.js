@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-const { connectToMongoDB } = require('./db');
-const { ObjectId } = require("mongodb");
+const {connectToMongoDB} = require('./db');
+const {ObjectId} = require("mongodb");
 
 const app = express();
 const port = 3000;
@@ -43,7 +43,7 @@ async function main() {
       
           res.json(routines);
         } catch (error) {
-          res.status(500).json({ message: 'Error fetching routines', error: error.message });
+          res.status(500).json({message: 'Error fetching routines', error: error.message});
         }
       });
   
@@ -54,26 +54,26 @@ async function main() {
         if (routine) {
             res.json(routine);
         } else {
-            res.status(404).json({ message: 'Routine not found' });
+            res.status(404).json({message: 'Routine not found'});
         }
         } catch (error) {
-        res.status(500).json({ message: 'Error fetching routine', error: error.message });
+        res.status(500).json({message: 'Error fetching routine', error: error.message});
         }
     });
 
     app.post('/routines', async (req, res) => {
       try {
-        const { name, workout_duration, difficulty, category, tags, routine } = req.body;
+        const {name, workout_duration, difficulty, category, tags, routine} = req.body;
     
         if (!name || !workout_duration || !difficulty || !category || !tags || !routine) {
-          return res.status(400).json({ message: 'Missing required fields' });
+          return res.status(400).json({message: 'Missing required fields'});
         }
     
-        const newRoutine = { name, workout_duration, difficulty, category, tags, routine };
+        const newRoutine = {name, workout_duration, difficulty, category, tags, routine};
         const result = await db.collection('routines').insertOne(newRoutine);
         res.status(201).json(result);
       } catch (error) {
-        res.status(500).json({ message: 'Error adding new routine', error: error.message });
+        res.status(500).json({message: 'Error adding new routine', error: error.message});
       }
     });
 
@@ -86,19 +86,19 @@ async function main() {
           return res.status(400).json({ message: 'Name and routine required, and routine should be a non-empty array.' });
         }
     
-        const updateData = { name, workout_duration, difficulty, category, tags, routine };
+        const updateData = {name, workout_duration, difficulty, category, tags, routine};
         const result = await db.collection('routines').updateOne(
-          { _id: id },
-          { $set: updateData }
+          {_id: id},
+          {$set: updateData}
         );
     
         if (result.modifiedCount === 0) {
-          return res.status(404).json({ message: 'No routine found with this ID, or no new data provided' });
+          return res.status(404).json({message: 'No routine found with this ID, or no new data provided'});
         }
     
         res.json({ message: 'Routine updated successfully' });
       } catch (error) {
-        res.status(500).json({ message: 'Error updating routine', error: error.message });
+        res.status(500).json({message: 'Error updating routine', error: error.message});
       }
     });
     
@@ -107,15 +107,15 @@ async function main() {
         const id = new ObjectId(req.params.id);
         const routine = await db.collection('routines').findOne({_id: id});
         if (routine) {
-          const result = await db.collection("routines").remove({
+          const result = await db.collection("routines").deleteOne({
             _id: id
           });
-          res.json({ message: 'Routine deleted successfully' });
+          res.json({message: 'Routine deleted successfully'});
         } else {
-            res.status(404).json({ message: 'Routine not found' });
+            res.status(404).json({message: 'Routine not found'});
         }
       } catch (error) {
-        res.status(500).json({ message: 'Error deleting routine', error: error.message });
+        res.status(500).json({message: 'Error deleting routine', error: error.message});
       }
     });
   

@@ -1,4 +1,4 @@
-const { MongoClient } = require('mongodb');
+const {MongoClient} = require('mongodb');
 require('dotenv').config();
 
 let _db = null;
@@ -21,4 +21,4 @@ function getDB(){
   return _db;
 }
 
-module.exports = { connectToMongoDB, getDB };
+module.exports = {connectToMongoDB, getDB};
