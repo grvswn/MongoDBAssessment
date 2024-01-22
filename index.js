@@ -17,7 +17,7 @@ async function main() {
     console.log('Connected to MongoDB');
 
     app.get('/', (req, res) => {
-      res.send('Route Test');
+      res.send('Express + MongoDB Assessment');
     });
 
     app.get('/routines', async (req, res) => {
