@@ -63,7 +63,7 @@ async function main() {
         }
     });
 
-    app.post('/routines', async (req, res) => {
+    app.post('/routines', authenticateToken, async (req, res) => {
       try {
         const {name, workout_duration, difficulty, category, tags, routine} = req.body;
     
@@ -79,7 +79,7 @@ async function main() {
       }
     });
 
-    app.put('/routines/:id', async (req, res) => {
+    app.put('/routines/:id', authenticateToken, async (req, res) => {
       try {
         const id = new ObjectId(req.params.id);
         const { name, workout_duration, difficulty, category, tags, routine } = req.body;
@@ -104,7 +104,7 @@ async function main() {
       }
     });
     
-    app.delete('/routines/:id', async (req, res) => {
+    app.delete('/routines/:id', authenticateToken, async (req, res) => {
       try {
         const id = new ObjectId(req.params.id);
         const routine = await db.collection('routines').findOne({_id: id});
