@@ -24,6 +24,11 @@ function authenticateToken(req, res, next) {
                 'error': 'Token not found'
             })
         }
+    } else {
+        res.status(400);
+        return res.json({
+            'error':'Missing token'
+        })
     }
 };
 
